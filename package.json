@@ -1,0 +1,15 @@
+{
+  "name": "st-pauls-spms",
+  "version": "1.0.0",
+  "description": "St. Paul's Matriculation School Management System",
+  "private": true,
+  "scripts": {
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

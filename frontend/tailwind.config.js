@@ -40,6 +40,18 @@ export default {
           800: '#92400e',
           900: '#78350f',
         },
+        maroon: {
+          50: '#fef2f3',
+          100: '#fde0e3',
+          200: '#fcc0c7',
+          300: '#f894a0',
+          400: '#f26d7d',
+          500: '#e84458',
+          600: '#d62d42',
+          700: '#b32032',
+          800: '#800020',
+          900: '#4d0013',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

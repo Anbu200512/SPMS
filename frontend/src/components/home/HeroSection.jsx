@@ -22,7 +22,7 @@ const HeroSection = () => {
       
       {/* Background Ambience (Removed the solid split block, using subtle blurs instead) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] bg-maroon-50 rounded-full blur-[120px]" />
+        <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] bg-primary-50 rounded-full blur-[120px]" />
         <div className="absolute top-[40%] -left-[10%] w-[500px] h-[500px] bg-gray-50 rounded-full blur-[100px]" />
         {/* Subtle grid pattern overlay for texture */}
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLCAwLCAwLCAwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50 mask-image-gradient-to-b" />
@@ -39,10 +39,10 @@ const HeroSection = () => {
             className="lg:col-span-6 text-center lg:text-left flex flex-col justify-center"
           >
             {/* Badge */}
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-3 px-5 py-2.5 bg-white border border-gray-100 rounded-full text-sm font-bold text-maroon-800 mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mx-auto lg:mx-0">
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-3 px-5 py-2.5 bg-white border border-gray-100 rounded-full text-sm font-bold text-primary-500 mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mx-auto lg:mx-0">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-maroon-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-maroon-600"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-500"></span>
               </span>
               <span className="tracking-wide uppercase text-xs">Established 2000</span>
             </motion.div>
@@ -50,7 +50,7 @@ const HeroSection = () => {
             {/* Heading */}
             <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-black mb-6 leading-[1.05] tracking-tight">
               St. Paul's
-              <span className="block text-maroon-800 mt-2 pb-2">
+              <span className="block text-primary-500 mt-2 pb-2">
                 Matriculation School
               </span>
             </motion.h1>
@@ -64,7 +64,7 @@ const HeroSection = () => {
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <Link
                 to="/admissions"
-                className="w-full sm:w-auto px-8 py-4 bg-maroon-800 text-white font-bold rounded-xl hover:bg-maroon-900 transition-all duration-300 shadow-[0_8px_20px_rgba(128,0,0,0.2)] hover:shadow-[0_8px_25px_rgba(128,0,0,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all duration-300 shadow-[0_8px_20px_rgba(128,0,0,0.2)] hover:shadow-[0_8px_25px_rgba(128,0,0,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
                 Explore Admissions
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
@@ -86,7 +86,7 @@ const HeroSection = () => {
                 { icon: "M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9", label: "Sports" },
               ].map((f, i) => (
                 <div key={i} className="flex flex-col items-center lg:items-start gap-3">
-                  <div className="p-3 bg-maroon-50 rounded-xl text-maroon-800 transition-colors hover:bg-maroon-100 cursor-default">
+                  <div className="p-3 bg-primary-50 rounded-xl text-primary-500 transition-colors hover:bg-primary-100 cursor-default">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={f.icon} /></svg>
                   </div>
                   <span className="text-sm font-semibold text-gray-800">{f.label}</span>
@@ -136,7 +136,7 @@ const HeroSection = () => {
               className="absolute top-[20%] -left-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-5 min-w-[200px] border border-gray-100 z-30"
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-maroon-50 rounded-xl text-maroon-800">
+                <div className="p-3 bg-primary-50 rounded-xl text-primary-500">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
                 <div>
@@ -150,23 +150,23 @@ const HeroSection = () => {
             <motion.div 
               animate={{ y: [5, -5, 5] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-[15%] -right-4 bg-maroon-800 rounded-2xl shadow-[0_8px_30px_rgba(128,0,0,0.3)] p-5 min-w-[180px] z-30"
+              className="absolute bottom-[15%] -right-4 bg-primary-500 rounded-2xl shadow-[0_8px_30px_rgba(128,0,0,0.3)] p-5 min-w-[180px] z-30"
             >
               <div className="flex flex-col">
                 <span className="text-3xl font-bold text-white">5,000+</span>
-                <span className="text-maroon-100 text-xs font-medium uppercase tracking-wider mt-1">Active Students</span>
+                <span className="text-primary-100 text-xs font-medium uppercase tracking-wider mt-1">Active Students</span>
                 
                 {/* Avatar Stack */}
                 <div className="mt-4 flex -space-x-2">
                   {[10, 11, 12, 13].map((num) => (
-                    <img 
+                      <img 
                       key={num} 
-                      className="inline-block h-8 w-8 rounded-full ring-2 ring-maroon-800 object-cover bg-white" 
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-500 object-cover bg-white" 
                       src={`https://i.pravatar.cc/100?img=${num}`} 
                       alt="Student"
                     />
                   ))}
-                  <div className="h-8 w-8 rounded-full ring-2 ring-maroon-800 bg-maroon-950 flex items-center justify-center">
+                  <div className="h-8 w-8 rounded-full ring-2 ring-primary-500 bg-primary-700 flex items-center justify-center">
                     <span className="text-[10px] font-bold text-white">+</span>
                   </div>
                 </div>

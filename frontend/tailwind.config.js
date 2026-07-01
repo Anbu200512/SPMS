@@ -1,57 +1,14 @@
 /** @type {import('tailwindcss').Config} */
+import { THEME } from './src/utils/theme';
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#1e40af',
-          600: '#1e3a8a',
-          700: '#1e3a5f',
-          800: '#1e3050',
-          900: '#0f172a',
-        },
-        secondary: {
-          50: '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#d946ef',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-        },
-        accent: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
-        },
-        maroon: {
-          50: '#fef2f3',
-          100: '#fde0e3',
-          200: '#fcc0c7',
-          300: '#f894a0',
-          400: '#f26d7d',
-          500: '#e84458',
-          600: '#d62d42',
-          700: '#b32032',
-          800: '#800020',
-          900: '#4d0013',
-        },
+        primary: THEME.colors.primary,
+        secondary: THEME.colors.secondary,
+        accent: THEME.colors.accent,
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

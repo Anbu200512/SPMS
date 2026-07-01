@@ -101,7 +101,7 @@ const seedData = async () => {
       { key: 'academicYear', value: '2026-2027', description: 'Current academic year' },
       { key: 'website', value: 'https://stpaulsschool.com', description: 'School website URL' },
     ]);
-    console.log(`${settings.length} settings created');
+    console.log(`${settings.length} settings created`);
 
     const events = await Event.insertMany([
       {

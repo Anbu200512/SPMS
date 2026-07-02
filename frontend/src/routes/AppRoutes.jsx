@@ -14,12 +14,11 @@ const About = lazy(() => import('../pages/About'));
 const Academics = lazy(() => import('../pages/Academics'));
 const Admissions = lazy(() => import('../pages/Admissions'));
 const Contact = lazy(() => import('../pages/Contact'));
-const Facilities = lazy(() => import('../pages/public/Facilities'));
-const Gallery = lazy(() => import('../pages/public/Gallery'));
-const Events = lazy(() => import('../pages/public/Events'));
-const News = lazy(() => import('../pages/public/News'));
+const Facilities = lazy(() => import('../pages/Facilities'));
+const Gallery = lazy(() => import('../pages/Gallery'));
+const Events = lazy(() => import('../pages/Events'));
+const News = lazy(() => import('../pages/News'));
 const Login = lazy(() => import('../pages/auth/Login'));
-const Register = lazy(() => import('../pages/auth/Register'));
 const ForgotPassword = lazy(() => import('../pages/auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('../pages/auth/ResetPassword'));
 const NotFound = lazy(() => import('../pages/NotFound'));
@@ -86,7 +85,6 @@ const AppRoutes = () => {
 
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Route>

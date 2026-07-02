@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { HiOutlineLockClosed } from 'react-icons/hi';
-import AuthLayout from '../../layouts/AuthLayout';
 import Button from '../../components/ui/Button';
 
 const ResetPassword = () => {
@@ -32,30 +31,32 @@ const ResetPassword = () => {
 
   if (success) {
     return (
-      <AuthLayout>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center py-6"
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center py-6"
+      >
+        <div className="text-5xl mb-4">✅</div>
+        <h3 className="text-xl font-heading font-semibold text-gray-800 mb-2">Password Reset Successful</h3>
+        <p className="text-gray-600 mb-6">
+          Your password has been successfully updated. You can now log in with your new password.
+        </p>
+        <Link
+          to="/login"
+          className="text-primary-600 hover:text-primary-700 font-medium"
         >
-          <div className="text-5xl mb-4">✅</div>
-          <h3 className="text-xl font-heading font-semibold text-gray-800 mb-2">Password Reset Successful</h3>
-          <p className="text-gray-600 mb-6">
-            Your password has been successfully updated. You can now log in with your new password.
-          </p>
-          <Link
-            to="/login"
-            className="text-primary-600 hover:text-primary-700 font-medium"
-          >
-            Go to Login
-          </Link>
-        </motion.div>
-      </AuthLayout>
+          Go to Login
+        </Link>
+      </motion.div>
     );
   }
 
   return (
-    <AuthLayout>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="text-center mb-6">
         <div className="text-4xl mb-2">🔐</div>
         <h2 className="text-2xl font-heading font-bold text-gray-800">Reset Password</h2>
@@ -118,7 +119,7 @@ const ResetPassword = () => {
           </Link>
         </p>
       </motion.form>
-    </AuthLayout>
+    </motion.div>
   );
 };
 

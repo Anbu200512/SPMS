@@ -25,16 +25,16 @@ const Home = () => {
       <Navbar />
       <HeroSection />
       <WelcomeSection />
-      <SchoolHighlights />
+      {/* <SchoolHighlights /> */}
       <AcademicExcellence />
-      <PrincipalMessage />
+      {/* <PrincipalMessage /> */}
       <FeaturedFacilities />
       <LatestNews />
       <UpcomingEvents />
       <GalleryPreview />
       <Testimonials />
       <CallToAction />
-      <Footer />
+      {/* <Footer /> */}
     </motion.div>
   );
 };

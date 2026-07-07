@@ -174,12 +174,7 @@ const Navbar = () => {
             >
               Login
             </Link>
-            <Link
-              to="/register"
-              className="px-5 py-2 text-sm font-medium bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg hover:from-primary-600 hover:to-primary-700 shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-200"
-            >
-              Sign Up
-            </Link>
+
           </div>
 
           {/* Mobile Menu Button */}
@@ -278,13 +273,7 @@ const Navbar = () => {
                   >
                     Login
                   </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-medium bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 shadow-md shadow-primary-500/20 transition-all duration-200"
-                  >
-                    Sign Up
-                  </Link>
+
                 </div>
               </div>
             </motion.div>

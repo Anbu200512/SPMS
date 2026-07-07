@@ -85,12 +85,7 @@ const LoginForm = () => {
         Sign In
       </Button>
 
-      <p className="text-center text-sm text-gray-600">
-        Don't have an account?{' '}
-        <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
-          Sign up
-        </Link>
-      </p>
+
     </motion.form>
   );
 };

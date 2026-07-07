@@ -18,7 +18,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative mt-20 min-h-screen flex items-center overflow-hidden bg-white pt-20 pb-16 lg:pt-0 lg:pb-0">
+    <section className="relative mt-16 min-h-screen flex items-center overflow-hidden bg-white pt-20 pb-16 lg:pt-0 lg:pb-0">
       
       {/* Background Ambience (Removed the solid split block, using subtle blurs instead) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -44,11 +44,11 @@ const HeroSection = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-500"></span>
               </span>
-              <span className="tracking-wide uppercase text-xs">Established 2000</span>
+              <span className="tracking-wide uppercase text-xs">Established 1982</span>
             </motion.div>
 
             {/* Heading */}
-            <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-black mb-6 leading-[1.05] tracking-tight">
+            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-black mb-6 leading-[1.05] tracking-tight">
               St. Paul's
               <span className="block text-primary-500 mt-2 pb-2">
                 Matriculation School
@@ -78,7 +78,7 @@ const HeroSection = () => {
             </motion.div>
 
             {/* Features Grid */}
-            <motion.div variants={itemVariants} className="mt-14 pt-8 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <motion.div variants={itemVariants} className="mt-10 pt-3 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-6">
               {[
                 { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", label: "Secure Campus" },
                 { icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253", label: "Rich Library" },
@@ -109,7 +109,7 @@ const HeroSection = () => {
             <div className="absolute top-0 right-0 w-[85%] h-[75%] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgb(0,0,0,0.15)] group">
               <div className="absolute inset-0 bg-black/5 z-10 transition-colors group-hover:bg-transparent" />
               <img
-                src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80"
+                src="https://images.unsplash.com/photo-1613896527026-f195d5c818ed?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2Nob29sJTIwY2FtcHVzfGVufDB8fDB8fHww"
                 alt="School campus"
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
@@ -120,7 +120,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
-              className="absolute bottom-4 left-0 w-[55%] h-[45%] rounded-2xl overflow-hidden shadow-2xl border-[8px] border-white z-20"
+              className="absolute bottom-14 left-0 w-[55%] h-[45%] rounded-2xl overflow-hidden shadow-2xl border-[8px] border-white z-20"
             >
               <img
                 src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
@@ -133,7 +133,7 @@ const HeroSection = () => {
             <motion.div 
               animate={{ y: [-5, 5, -5] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[20%] -left-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-5 min-w-[200px] border border-gray-100 z-30"
+              className="absolute top-4 left-[5%] bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-5 min-w-[200px] border border-gray-100 z-30"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary-50 rounded-xl text-primary-500">
@@ -141,7 +141,7 @@ const HeroSection = () => {
                 </div>
                 <div>
                   <h4 className="text-2xl font-bold text-gray-900">25+</h4>
-                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wider mt-0.5">Years Legacy</p>
+                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wider ">Years Legacy</p>
                 </div>
               </div>
             </motion.div>
@@ -153,7 +153,7 @@ const HeroSection = () => {
               className="absolute bottom-[15%] -right-4 bg-primary-500 rounded-2xl shadow-[0_8px_30px_rgba(128,0,0,0.3)] p-5 min-w-[180px] z-30"
             >
               <div className="flex flex-col">
-                <span className="text-3xl font-bold text-white">5,000+</span>
+                <span className="text-3xl font-bold text-white">500+</span>
                 <span className="text-primary-100 text-xs font-medium uppercase tracking-wider mt-1">Active Students</span>
                 
                 {/* Avatar Stack */}

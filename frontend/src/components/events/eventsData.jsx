@@ -41,7 +41,7 @@ const allEvents = [
     description: 'Annual sports day with various athletic events, races, and team competitions.',
     category: 'Sports',
     isUpcoming: true,
-    image: 'https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=600&q=80',
+    image: 'https://media.istockphoto.com/id/466335022/photo/space-hopper-challenge.webp?a=1&b=1&s=612x612&w=0&k=20&c=S2_tobBpnCGmGD8V_lu7_hXEF1HqhcG3SMsNAxoKscg=',
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ const allEvents = [
     description: 'A vibrant cultural festival featuring music, dance, drama, and art competitions.',
     category: 'Cultural',
     isUpcoming: true,
-    image: 'https://images.unsplash.com/photo-1547153760-18fc8636b1fe?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1463592177119-bab2a00f3ccb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3VsdHVyYWwlMjBmZXN0fGVufDB8fDB8fHww',
   },
   {
     id: 6,
@@ -74,7 +74,7 @@ const allEvents = [
     description: 'Celebration of Independence Day with flag hoisting, parade, and cultural programs.',
     category: 'Cultural',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1599571234907-9aa5d2eef109?w=600&q=80',
+    image: 'https://media.istockphoto.com/id/1295723184/photo/happy-young-indian-boys-holding-indian-national-flag.webp?a=1&b=1&s=612x612&w=0&k=20&c=_GpVlm7nuqjUqER5SiRBmJowC1M8S4ABeRDy0gR0wtk=',
   },
   {
     id: 8,

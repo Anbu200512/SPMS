@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
-import PageHeader from '../components/common/PageHeader';
+import EventsHero from '../components/events/EventsHero';
+import EventsCta from '../components/events/EventsCta';
 import EventFilters from '../components/events/EventFilters';
 import EventList from '../components/events/EventList';
 import allEvents from '../components/events/eventsData';
@@ -25,11 +24,7 @@ const Events = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Navbar />
-      <PageHeader
-        title="School Events"
-        subtitle="Stay updated with the latest events and activities at St. Paul's"
-      />
+      <EventsHero />
 
       <section className="section-padding">
         <div className="section-container">
@@ -54,7 +49,8 @@ const Events = () => {
           )}
         </div>
       </section>
-      <Footer />
+
+      <EventsCta />
     </motion.div>
   );
 };

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
-import PageHeader from '../components/common/PageHeader';
+import NewsHero from '../components/news/NewsHero';
+import NewsCta from '../components/news/NewsCta';
 import NewsFilters from '../components/news/NewsFilters';
 import NewsCard from '../components/news/NewsCard';
 import NewsSidebar from '../components/news/NewsSidebar';
@@ -36,11 +35,7 @@ const News = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Navbar />
-      <PageHeader
-        title="News & Updates"
-        subtitle="Latest news, achievements, and announcements from St. Paul's School"
-      />
+      <NewsHero />
 
       <section className="section-padding">
         <div className="section-container">
@@ -85,7 +80,8 @@ const News = () => {
           </div>
         </div>
       </section>
-      <Footer />
+
+      <NewsCta />
     </motion.div>
   );
 };

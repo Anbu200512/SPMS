@@ -44,27 +44,23 @@ const FacilityStats = () => {
   }, []);
 
   return (
-    <section className="relative -mt-16 z-20">
-      <div className="section-container">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-          {statsData.map((stat, idx) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white rounded-xl shadow-xl p-4 md:p-6 text-center"
-            >
-              <stat.icon className="w-6 h-6 md:w-8 md:h-8 mx-auto text-primary-500 mb-2" />
-              <div className="text-2xl md:text-3xl font-heading font-bold text-primary-700">
-                <AnimatedCounter value={liveStats[idx]} suffix={stat.suffix} />
-              </div>
-              <p className="text-xs md:text-sm text-gray-500 mt-1">{stat.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+      {statsData.map((stat, idx) => (
+        <motion.div
+          key={stat.label}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: idx * 0.1 }}
+          className="bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 text-center border border-white/10 hover:bg-white/15 transition-all duration-300"
+        >
+          <stat.icon className="w-6 h-6 md:w-8 md:h-8 mx-auto text-accent-400 mb-2" />
+          <div className="text-2xl md:text-3xl font-heading font-bold text-white">
+            <AnimatedCounter value={liveStats[idx]} suffix={stat.suffix} />
+          </div>
+          <p className="text-xs md:text-sm text-white/60 mt-1">{stat.label}</p>
+        </motion.div>
+      ))}
+    </div>
   );
 };
 

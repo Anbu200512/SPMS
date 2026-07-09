@@ -34,7 +34,7 @@ const UpcomingEvents = () => {
               viewport={{ once: true }}
               className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300"
             >
-              <div className="w-14 h-14 bg-accent-500 rounded-xl flex items-center justify-center mb-4">
+              <div className="w-14 h-14 bg-primary-500 rounded-xl flex items-center justify-center mb-4">
                 <span className="text-white font-heading font-bold text-lg">
                   {new Date(event.date).getDate()}
                 </span>

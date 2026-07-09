@@ -24,7 +24,7 @@ const galleryImages = [
     id: 4,
     title: 'Sports Day',
     category: 'Sports',
-    image: 'https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1761039808159-f02b58f07032?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHNwb3J0cyUyMGRheXxlbnwwfHwwfHx8MA%3D%3D',
     color: 'from-red-500 to-red-600',
   },
   {
@@ -66,21 +66,21 @@ const galleryImages = [
     id: 10,
     title: 'Dance Performance',
     category: 'Cultural',
-    image: 'https://images.unsplash.com/photo-1547153760-18fc8636b1fe?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1621976360623-004223992275?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fERhbmNlJTIwUGVyZm9ybWFuY2V8ZW58MHx8MHx8fDA%3D',
     color: 'from-rose-500 to-rose-600',
   },
   {
     id: 11,
     title: 'Playground',
     category: 'Campus',
-    image: 'https://images.unsplash.com/photo-1579338559199-a162f19bf0eb?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1711369093144-2ada6e035a84?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8UGxheWdyb3VuZHxlbnwwfHwwfHx8MA%3D%3D',
     color: 'from-emerald-500 to-emerald-600',
   },
   {
     id: 12,
     title: 'Athletics Meet',
     category: 'Sports',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80',
+    image: 'https://media.istockphoto.com/id/1148219796/photo/teachers-applauding-for-student-at-awards-ceremony.webp?a=1&b=1&s=612x612&w=0&k=20&c=okL1qjTCi7BzIXnAqEwjRiQK4V_L4ytp3z9OxGZykY4=',
     color: 'from-yellow-500 to-yellow-600',
   },
   {
@@ -101,7 +101,7 @@ const galleryImages = [
     id: 15,
     title: 'Classroom',
     category: 'Campus',
-    image: 'https://images.unsplash.com/photo-1580582932473-3f9a7a1f2c6d?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1635424239131-32dc44986b56?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNsYXNzcm9vbXxlbnwwfHwwfHx8MA%3D%3D',
     color: 'from-sky-500 to-sky-600',
   },
   {

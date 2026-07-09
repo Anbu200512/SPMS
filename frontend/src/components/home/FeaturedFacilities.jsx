@@ -1,45 +1,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import {
-  HiOutlineComputerDesktop,
-  HiOutlineBeaker,
-  HiOutlineBookOpen,
-  HiOutlineTrophy,
-  HiOutlineMusicalNote,
-  HiOutlineHeart,
-} from 'react-icons/hi2';
 
 const facilities = [
   {
-    icon: HiOutlineComputerDesktop,
     title: 'Smart Classrooms',
     desc: 'Technology-enabled classrooms for interactive learning',
+    image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=150&q=80',
   },
   {
-    icon: HiOutlineBeaker,
     title: 'Science Labs',
     desc: 'Well-equipped physics, chemistry, and biology laboratories',
+    image: 'https://images.unsplash.com/photo-1581093588401-fbb62a02f120?w=150&q=80',
   },
   {
-    icon: HiOutlineBookOpen,
     title: 'Library',
     desc: 'Extensive collection of books, journals, and digital resources',
+    image: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=150&q=80',
   },
   {
-    icon: HiOutlineTrophy,
     title: 'Sports Complex',
     desc: 'Modern facilities for indoor and outdoor sports',
+    image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=150&q=80',
   },
   {
-    icon: HiOutlineMusicalNote,
     title: 'Music & Arts',
     desc: 'Dedicated spaces for music, dance, and visual arts',
+    image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=150&q=80',
   },
   {
-    icon: HiOutlineHeart,
     title: 'Health Center',
     desc: 'On-campus medical facility with trained staff',
+    image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=150&q=80',
   },
 ];
 
@@ -76,39 +68,40 @@ const FeaturedFacilities = () => {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {facilities.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -6 }}
-                className="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {facilities.map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -6 }}
+              className="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <div className="relative z-10 p-6 md:p-7 flex gap-5 items-start">
-                  <div className="flex-shrink-0 w-14 h-14 bg-primary-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                    <Icon className="w-7 h-7 text-white" />
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-heading font-bold text-gray-900 mb-1.5 group-hover:text-primary-700 transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 leading-relaxed group-hover:text-gray-600 transition-colors">
-                      {item.desc}
-                    </p>
-                  </div>
+              <div className="relative z-10 p-6 md:p-7 flex gap-5 items-start">
+                <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden shadow-md group-hover:scale-110 transition-all duration-300">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
 
-                <div className="relative z-10 h-1 bg-gradient-to-r from-primary-500 to-accent-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              </motion.div>
-            );
-          })}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-heading font-bold text-gray-900 mb-1.5 group-hover:text-primary-700 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed group-hover:text-gray-600 transition-colors">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="relative z-10 h-1 bg-gradient-to-r from-primary-500 to-accent-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            </motion.div>
+          ))}
         </div>
 
         <motion.div

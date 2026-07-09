@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
-import PageHeader from '../components/common/PageHeader';
+import GalleryHero from '../components/gallery/GalleryHero';
 import GalleryFilters from '../components/gallery/GalleryFilters';
 import GalleryGrid from '../components/gallery/GalleryGrid';
 import GalleryLightbox from '../components/gallery/GalleryLightbox';
+import FeaturedVideos from '../components/gallery/FeaturedVideos';
+import GalleryCta from '../components/gallery/GalleryCta';
 import galleryImages from '../components/gallery/galleryData';
 
 const Gallery = () => {
@@ -18,11 +18,7 @@ const Gallery = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Navbar />
-      <PageHeader
-        title="Photo Gallery"
-        subtitle="Capturing memories and moments throughout the academic year"
-      />
+      <GalleryHero />
 
       <section className="section-padding">
         <div className="section-container">
@@ -45,11 +41,14 @@ const Gallery = () => {
         </div>
       </section>
 
+      <FeaturedVideos />
+
+      <GalleryCta />
+
       <GalleryLightbox
         image={selectedImage}
         onClose={() => setSelectedImage(null)}
       />
-      <Footer />
     </motion.div>
   );
 };

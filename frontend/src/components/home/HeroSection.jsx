@@ -62,7 +62,7 @@ const HeroSection = () => {
             alt=""
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/30" />
         </motion.div>
       </AnimatePresence>
 
@@ -77,17 +77,17 @@ const HeroSection = () => {
               transition={{ duration: 0.6, ease: 'easeOut' }}
               className="lg:col-span-7 text-center lg:text-left flex flex-col justify-center"
             >
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs font-bold text-white mb-8 shadow-lg mx-auto lg:mx-0">
-                <span className="relative flex h-2 w-2">
+              <div className="inline-flex items-center gap-1 px-1.5 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-bold text-white mb-8 shadow-lg w-fit mx-auto lg:mx-0">
+                <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-400" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-400" />
                 </span>
-                <span className="tracking-wide uppercase text-xs">{slide.badge}</span>
+                <span className="tracking-wide uppercase">{slide.badge}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-4 leading-[1.05] tracking-tight">
                 {slide.title}
-                <span className="block text-accent-400 mt-2">
+                <span className="block text-primary-500 mt-2">
                   {slide.subtitle}
                 </span>
               </h1>
@@ -99,7 +99,7 @@ const HeroSection = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <Link
                   to={slide.cta.link}
-                  className="w-full sm:w-auto px-8 py-4 bg-accent-500 text-white font-bold rounded-xl hover:bg-accent-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-4 bg-primary-500 text-white font-bold rounded-xl hover:bg-accent-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
                 >
                   {slide.cta.text}
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>

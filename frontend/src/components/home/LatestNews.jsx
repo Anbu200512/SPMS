@@ -9,7 +9,7 @@ const newsItems = [
     title: 'Annual Sports Day 2025',
     date: '2025-03-15',
     excerpt: 'Our annual sports day event was a grand success with students showcasing their athletic talents.',
-    image: 'https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1700914298569-8f396c0802bb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8QW5udWFsJTIwU3BvcnRzJTIwRGF5JTIwMjAyNXxlbnwwfHwwfHx8MA%3D%3D',
     category: 'Event',
   },
   {
@@ -33,7 +33,7 @@ const newsItems = [
     title: 'New Academic Session',
     date: '2025-03-01',
     excerpt: 'Registration for the new academic year 2025-26 is now open. Enroll your child today!',
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110cabc?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8TmV3JTIwQWNhZGVtaWMlMjBTZXNzaW9ufGVufDB8fDB8fHww',
     category: 'Admissions',
   },
 ];

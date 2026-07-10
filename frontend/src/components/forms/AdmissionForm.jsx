@@ -4,39 +4,84 @@ import { motion } from 'framer-motion';
 import api from '../../services/api';
 import { showSuccess, showError } from '../ui/Toast';
 import Button from '../ui/Button';
+import emailjs from "@emailjs/browser";
 
 const AdmissionForm = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    trigger,
-  } = useForm();
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+  trigger,
+  reset,
+} = useForm();
 
   const nextStep = async () => {
-    const fieldsToValidate = step === 1 ? ['studentName', 'dob', 'gender', 'class'] : ['parentName', 'parentEmail', 'parentPhone'];
-    const valid = await trigger(fieldsToValidate);
+const fieldsToValidate =
+  step === 1
+    ? ['studentName', 'dob', 'gender', 'class']
+    : ['parentName', 'email', 'phone'];
+        const valid = await trigger(fieldsToValidate);
     if (valid) setStep((prev) => Math.min(prev + 1, 3));
   };
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
+const onSubmit = async (data) => {
+  setLoading(true);
 
-  const onSubmit = async (data) => {
-    setLoading(true);
-    try {
-      await api.post('/admissions', data);
-      showSuccess('Application submitted successfully! We will contact you soon.');
-      setStep(1);
-    } catch (err) {
-      showError(err.response?.data?.message || 'Submission failed. Please try again.');
-    } finally {
-      setLoading(false);
+  try {
+    // Create FormData
+    const formData = new FormData();
+
+    // Append normal fields
+    formData.append("studentName", data.studentName);
+    formData.append("dob", data.dob);
+    formData.append("gender", data.gender);
+    formData.append("class", data.class);
+    formData.append("parentName", data.parentName);
+    formData.append("relationship", data.relationship);
+    formData.append("phone", data.phone);
+    formData.append("email", data.email);
+    formData.append("address", data.address || "");
+    formData.append("previousSchool", data.previousSchool || "");
+    formData.append("academicYear", data.academicYear || "");
+    formData.append("medicalInfo", data.medicalInfo || "");
+
+    // Append uploaded files
+    if (data.documents && data.documents.length > 0) {
+      Array.from(data.documents).forEach((file) => {
+        formData.append("documents", file);
+      });
     }
-  };
 
+    // Send to backend
+    const response = await api.post("/admissions", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(response.data);
+
+    showSuccess("Application submitted successfully!");
+
+    reset();
+    setStep(1);
+
+  } catch (err) {
+    console.error(err);
+
+    showError(
+      err.response?.data?.message ||
+      err.message ||
+      "Submission failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center justify-between mb-8">
@@ -94,9 +139,9 @@ const AdmissionForm = () => {
                 }`}
               >
                 <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+            <option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Other">Other</option>
               </select>
               {errors.gender && <p className="mt-1 text-sm text-red-500">{errors.gender.message}</p>}
             </div>
@@ -157,27 +202,32 @@ const AdmissionForm = () => {
           <div className="grid sm:grid-cols-2 gap-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Email *</label>
-              <input
-                type="email"
-                {...register('parentEmail', { required: 'Email is required' })}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                  errors.parentEmail ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                }`}
-                placeholder="email@example.com"
-              />
-              {errors.parentEmail && <p className="mt-1 text-sm text-red-500">{errors.parentEmail.message}</p>}
-            </div>
+            <input
+  type="email"
+  {...register('email', { required: 'Email is required' })}
+  className={`w-full px-4 py-3 border rounded-lg ${
+    errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+  }`}
+  placeholder="email@example.com"
+/>
+
+{errors.email && (
+  <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+)} </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone *</label>
-              <input
-                type="tel"
-                {...register('parentPhone', { required: 'Phone is required' })}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                  errors.parentPhone ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                }`}
-                placeholder="Phone number"
-              />
-              {errors.parentPhone && <p className="mt-1 text-sm text-red-500">{errors.parentPhone.message}</p>}
+             <input
+  type="tel"
+  {...register('phone', { required: 'Phone is required' })}
+  className={`w-full px-4 py-3 border rounded-lg ${
+    errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
+  }`}
+  placeholder="Phone number"
+/>
+
+{errors.phone && (
+  <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
+)}
             </div>
           </div>
           <div>
@@ -233,8 +283,12 @@ const AdmissionForm = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Documents</label>
             <div className="p-6 border-2 border-dashed border-gray-300 rounded-lg text-center">
               <p className="text-gray-500 text-sm mb-2">Upload documents here</p>
-              <input type="file" multiple className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" />
-            </div>
+<input
+  type="file"
+  multiple
+  {...register("documents")}
+  className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+/>            </div>
           </div>
           <div className="flex justify-between pt-4">
             <Button type="button" variant="outline" onClick={prevStep}>Previous</Button>

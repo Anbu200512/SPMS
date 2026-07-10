@@ -43,7 +43,7 @@ const Admissions = () => {
           </div>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </motion.div>
   );
 };

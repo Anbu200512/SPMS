@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import api from '../../services/api';
 import { showSuccess, showError } from '../ui/Toast';
 import Button from '../ui/Button';
-import emailjs from "@emailjs/browser";
 
 const AdmissionForm = () => {
   const [step, setStep] = useState(1);
@@ -65,8 +64,9 @@ const onSubmit = async (data) => {
 
     console.log(response.data);
 
-    showSuccess("Application submitted successfully!");
-
+showSuccess(
+  "Application submitted successfully! Confirmation email sent."
+);
     reset();
     setStep(1);
 
@@ -204,7 +204,13 @@ const onSubmit = async (data) => {
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Email *</label>
             <input
   type="email"
-  {...register('email', { required: 'Email is required' })}
+{...register('email', {
+  required: 'Email is required',
+  pattern: {
+    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    message: "Enter a valid email address"
+  }
+})}
   className={`w-full px-4 py-3 border rounded-lg ${
     errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
   }`}

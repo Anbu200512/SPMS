@@ -1,3 +1,4 @@
+const sendSuccessMail = require("../utils/sendSuccessMail");
 const Admission = require("../models/Admission");
 const sendAdmissionEmail = require("../utils/sendAdmissionEmail");
 const asyncHandler = require("../utils/asyncHandler");
@@ -81,14 +82,20 @@ const createAdmission = async (req, res) => {
       status: "Pending",
     });
 
-    // Send email with uploaded files
-    await sendAdmissionEmail(admission, uploadedFiles);
+    // Send emails (School + Parent)
+    try {
+      await sendAdmissionEmail(admission, uploadedFiles);
+    } catch (mailError) {
+      console.error("Email sending failed:", mailError);
+    }
 
+    // Send success response
     res.status(201).json({
       success: true,
       message: "Admission submitted successfully.",
       data: admission,
     });
+
   } catch (error) {
     console.error("Admission Error:", error);
 

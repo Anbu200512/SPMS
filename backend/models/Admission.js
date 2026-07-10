@@ -39,12 +39,16 @@ const admissionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
-    email: {
-      type: String,
-      trim: true,
-      lowercase: true,
-    },
+documents: {
+  type: [String],
+  default: [],
+},
+   email: {
+  type: String,
+  required: true,
+  trim: true,
+  lowercase: true,
+},
 
     address: String,
     previousSchool: String,

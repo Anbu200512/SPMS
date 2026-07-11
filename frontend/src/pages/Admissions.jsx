@@ -2,15 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
-import PageHeader from '../components/common/PageHeader';
+import AdmissionsHero from '../components/admissions/AdmissionsHero';
 import AdmissionForm from '../components/forms/AdmissionForm';
 
 const Admissions = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <Navbar />
-      <PageHeader title="Admissions" subtitle="Begin your journey with St. Paul's" />
-      <section className="section-padding">
+      <AdmissionsHero />
+      <section id="process" className="section-padding">
         <div className="section-container">
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-1">
@@ -35,7 +35,7 @@ const Admissions = () => {
               </div>
             </div>
             <div className="lg:col-span-2">
-              <div className="bg-white p-8 rounded-xl shadow-lg">
+              <div id="application-form" className="bg-white p-8 rounded-xl shadow-lg">
                 <h3 className="text-2xl font-heading font-bold text-primary-700 mb-6">Application Form</h3>
                 <AdmissionForm />
               </div>

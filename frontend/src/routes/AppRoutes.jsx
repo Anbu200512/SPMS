@@ -46,6 +46,8 @@ const TeacherMarksEntry = lazy(() => import('../pages/teacher/MarksEntry'));
 const TeacherStudyMaterials = lazy(() => import('../pages/teacher/StudyMaterials'));
 const TeacherTimetable = lazy(() => import('../pages/teacher/Timetable'));
 const TeacherNotifications = lazy(() => import('../pages/teacher/Notifications'));
+const TeacherLeave = lazy(() => import('../pages/teacher/Leave'));
+const TeacherNotice = lazy(() => import('../pages/teacher/Notice'));
 
 const AdminDashboard = lazy(() => import('../pages/admin/Dashboard'));
 const AdminStudents = lazy(() => import('../pages/admin/Students'));
@@ -118,6 +120,8 @@ const AppRoutes = () => {
             <Route path="study-materials" element={<TeacherStudyMaterials />} />
             <Route path="timetable" element={<TeacherTimetable />} />
             <Route path="notifications" element={<TeacherNotifications />} />
+            <Route path="leave" element={<TeacherLeave />} />
+            <Route path="notice" element={<TeacherNotice />} />
           </Route>
         </Route>
 

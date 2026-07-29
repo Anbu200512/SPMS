@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/upload');
 const {
   getStudyMaterials,
   getStudyMaterial,
@@ -11,8 +12,8 @@ const { protect, authorize } = require('../middleware/auth');
 
 router.get('/', protect, getStudyMaterials);
 router.get('/:id', protect, getStudyMaterial);
-router.post('/', protect, authorize('admin', 'teacher'), createStudyMaterial);
-router.put('/:id', protect, authorize('admin', 'teacher'), updateStudyMaterial);
+router.post('/', protect, authorize('admin', 'teacher'), upload.single('file'), createStudyMaterial);
+router.put('/:id', protect, authorize('admin', 'teacher'), upload.single('file'), updateStudyMaterial);
 router.delete('/:id', protect, authorize('admin'), deleteStudyMaterial);
 
 module.exports = router;

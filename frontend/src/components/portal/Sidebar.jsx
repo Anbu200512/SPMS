@@ -44,13 +44,15 @@ const menuItems = {
   teacher: [
     { label: 'Dashboard', path: '/teacher', icon: HiOutlineHome },
     { label: 'My Classes', path: '/teacher/classes', icon: HiOutlineBookOpen },
-    { label: 'Profile', path: '/teacher/profile', icon: HiOutlineUserGroup },
     { label: 'Attendance', path: '/teacher/attendance', icon: HiOutlineClipboardList },
+    { label: 'Marks Entry', path: '/teacher/marks-entry', icon: HiOutlineChartBar },
     { label: 'Assignments', path: '/teacher/assignments', icon: HiOutlineClipboardList },
     { label: 'Homework', path: '/teacher/homework', icon: HiOutlineClipboardList },
-    { label: 'Marks Entry', path: '/teacher/marks-entry', icon: HiOutlineChartBar },
-    { label: 'Study Materials', path: '/teacher/study-materials', icon: HiOutlineBookOpen },
     { label: 'Timetable', path: '/teacher/timetable', icon: HiOutlineCalendar },
+    { label: 'Leave', path: '/teacher/leave', icon: HiOutlineClipboardList },
+    { label: 'Notice Board', path: '/teacher/notice', icon: HiOutlineClipboardList },
+    { label: 'Study Materials', path: '/teacher/study-materials', icon: HiOutlineBookOpen },
+    { label: 'Profile', path: '/teacher/profile', icon: HiOutlineUserGroup },
     { label: 'Notifications', path: '/teacher/notifications', icon: HiOutlineBell },
   ],
   student: [

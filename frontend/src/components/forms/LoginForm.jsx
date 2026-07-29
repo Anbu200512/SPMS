@@ -21,9 +21,13 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await login(data);
+      const response = await login(data);
       showSuccess('Welcome back! Login successful.');
-      navigate('/');
+      const role = response?.data?.user?.role;
+      if (role === 'admin') navigate('/admin');
+      else if (role === 'teacher') navigate('/teacher');
+      else if (role === 'student') navigate('/student');
+      else navigate('/');
     } catch (err) {
       showError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {

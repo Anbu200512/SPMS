@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import StatCard from '../../components/portal/StatCard';
+import { Link } from 'react-router-dom';
 import {
   HiOutlineClipboardCheck,
   HiOutlineBookOpen,
@@ -7,142 +8,222 @@ import {
   HiOutlineCurrencyDollar,
   HiOutlineBell,
   HiOutlineAcademicCap,
+  HiOutlineChevronRight,
+  HiOutlineExclamationCircle,
+  HiOutlineStar,
 } from 'react-icons/hi';
+import { formatDate } from '../../utils/helpers';
+import StatCard from '../../components/portal/StatCard';
+import Card from '../../components/ui/Card';
+import { getStudentDashboard } from '../../services/studentService';
 
-const container = {
+const containerVariants = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
-const item = {
+const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
 const Dashboard = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getStudentDashboard()
+      .then((res) => {
+        setData(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || 'Failed to load dashboard');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64 text-red-500">{error}</div>
+    );
+  }
+
+  const studentName = data?.student?.user?.name || 'Student';
   const stats = [
-    { label: 'Attendance', value: '92%', icon: HiOutlineClipboardCheck, color: 'green', trend: '+2' },
-    { label: 'Pending Assignments', value: '5', icon: HiOutlineBookOpen, color: 'blue', trend: '3 pending' },
-    { label: 'Upcoming Exams', value: '2', icon: HiOutlineCalendar, color: 'orange', trend: 'upcoming' },
-    { label: 'Due Fees', value: '\u20B915,000', icon: HiOutlineCurrencyDollar, color: 'red', trend: 'due' },
+    { label: 'Attendance', value: `${data?.attendancePercentage ?? 0}%`, icon: HiOutlineClipboardCheck, color: 'green', trend: 0 },
+    { label: 'Upcoming Exams', value: data?.upcomingExams?.length ?? 0, icon: HiOutlineCalendar, color: 'orange', trend: 0 },
+    { label: 'Pending Fees', value: data?.stats?.pendingFees ?? 0, icon: HiOutlineCurrencyDollar, color: 'red', trend: 0 },
+    { label: 'Notifications', value: data?.stats?.unreadNotifications ?? 0, icon: HiOutlineBell, color: 'blue', trend: 0 },
   ];
 
-  const recentActivity = [
-    { title: 'Mathematics Assignment', desc: 'Submitted on time', time: '2 hours ago' },
-    { title: 'Attendance Marked', desc: 'Present - 15 Jun 2026', time: 'Today' },
-    { title: 'Exam Schedule', desc: 'Mid-term exams announced', time: 'Yesterday' },
-    { title: 'Fee Payment', desc: 'Tuition fee paid for June', time: '3 days ago' },
-  ];
-
-  const upcomingEvents = [
-    { title: 'Annual Day', date: '25', month: 'Jul', venue: 'School Auditorium' },
-    { title: 'Sports Meet', date: '10', month: 'Aug', venue: 'Playground' },
-    { title: 'PTA Meeting', date: '05', month: 'Jul', venue: 'Conference Hall' },
-    { title: 'Science Fair', date: '18', month: 'Aug', venue: 'Science Block' },
-  ];
-
-  const notifications = [
-    { title: 'Assignment Deadline', message: 'Physics assignment due tomorrow', time: '1 hour ago', unread: true },
-    { title: 'Exam Schedule Updated', message: 'Mid-term schedule has been revised', time: '5 hours ago', unread: true },
-    { title: 'Fee Reminder', message: 'Library fee payment pending', time: '1 day ago', unread: false },
-  ];
+  const upcomingExams = data?.upcomingExams || [];
+  const pendingFees = data?.pendingFees || [];
+  const recentResults = data?.recentResults || [];
+  const notifications = data?.notifications || [];
 
   return (
-    <div className="p-4 md:p-6">
-      <motion.div variants={item} initial="hidden" animate="show">
-        <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome, Student Name</h1>
-        <p className="text-gray-500 mb-6">Here's your academic overview</p>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
+      <motion.div variants={itemVariants}>
+        <h1 className="text-2xl md:text-3xl font-heading font-bold text-gray-800">
+          Welcome back, {studentName}
+        </h1>
+        <p className="text-gray-500 mt-1">Here is your academic overview.</p>
       </motion.div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-      >
-        {stats.map((stat, i) => (
-          <motion.div key={i} variants={item}>
-            <StatCard {...stat} />
-          </motion.div>
+      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat) => (
+          <StatCard key={stat.label} {...stat} />
         ))}
       </motion.div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-      >
-        <motion.div variants={item} className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {recentActivity.map((act, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 pb-3 border-b border-gray-100 last:border-0"
-              >
-                <div className="w-2 h-2 mt-2 rounded-full bg-primary-500 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-800">{act.title}</p>
-                  <p className="text-sm text-gray-500">{act.desc}</p>
-                </div>
-                <span className="text-xs text-gray-400 flex-shrink-0">{act.time}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
+          {upcomingExams.length > 0 && (
+            <Card>
+              <div className="flex items-center gap-2 mb-4">
+                <HiOutlineExclamationCircle className="w-5 h-5 text-primary-500" />
+                <h2 className="text-lg font-heading font-semibold text-gray-800">Upcoming Exams</h2>
               </div>
-            ))}
-          </div>
+              <div className="space-y-3">
+                {upcomingExams.map((exam, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-primary-50/30 transition-colors"
+                  >
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{exam.subject?.name || 'N/A'}</p>
+                      <p className="text-xs text-gray-500">{exam.class?.name || ''} {exam.section?.name || ''}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-primary-600">{formatDate(exam.date)}</p>
+                      {exam.type && <p className="text-xs text-gray-400">{exam.type}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {recentResults.length > 0 && (
+            <Card>
+              <div className="flex items-center gap-2 mb-4">
+                <HiOutlineAcademicCap className="w-5 h-5 text-accent-500" />
+                <h2 className="text-lg font-heading font-semibold text-gray-800">Recent Results</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[400px]">
+                  <thead>
+                    <tr className="border-b border-gray-100">
+                      <th className="text-left py-2 px-2 text-xs font-semibold text-gray-500 uppercase">Subject</th>
+                      <th className="text-center py-2 px-2 text-xs font-semibold text-gray-500 uppercase">Marks</th>
+                      <th className="text-center py-2 px-2 text-xs font-semibold text-gray-500 uppercase">Grade</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentResults.map((result, idx) => (
+                      <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                        <td className="py-2 px-2 text-sm font-medium text-gray-800">{result.subject?.name || 'N/A'}</td>
+                        <td className="py-2 px-2 text-sm text-gray-600 text-center">{result.marksObtained}/{result.maxMarks}</td>
+                        <td className="py-2 px-2 text-sm text-center">
+                          <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                            (result.grade || '').startsWith('A') ? 'bg-green-100 text-green-700' :
+                            (result.grade || '').startsWith('B') ? 'bg-blue-100 text-blue-700' :
+                            'bg-yellow-100 text-yellow-700'
+                          }`}>{result.grade || '-'}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          )}
+
+          {pendingFees.length > 0 && (
+            <Card>
+              <div className="flex items-center gap-2 mb-4">
+                <HiOutlineCurrencyDollar className="w-5 h-5 text-red-500" />
+                <h2 className="text-lg font-heading font-semibold text-gray-800">Pending Fees</h2>
+              </div>
+              <div className="space-y-3">
+                {pendingFees.map((fee, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-red-50">
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{fee.feeType || 'Fee'}</p>
+                      <p className="text-xs text-gray-500">Due: {formatDate(fee.dueDate)}</p>
+                    </div>
+                    <span className="text-sm font-semibold text-red-600">₹{fee.amount || 0}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
         </motion.div>
 
-        <motion.div variants={item} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <h2 className="text-lg font-semibold mb-4">Notifications</h2>
-          <div className="space-y-3">
-            {notifications.map((n, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
-              >
-                <div className="relative">
-                  <HiOutlineBell className="w-5 h-5 text-gray-400" />
-                  {n.unread && (
-                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-800 text-sm">{n.title}</p>
-                  <p className="text-xs text-gray-500">{n.message}</p>
-                </div>
-                <span className="text-xs text-gray-400 flex-shrink-0">{n.time}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <HiOutlineAcademicCap className="w-5 h-5 text-primary-500" />
-                <span className="text-sm font-medium text-gray-700">Upcoming Events</span>
-              </div>
-            </div>
-            <div className="mt-3 space-y-3">
-              {upcomingEvents.slice(0, 2).map((event, i) => (
-                <div key={i} className="flex items-center gap-3 p-2 bg-primary-50 rounded-lg">
-                  <div className="text-center min-w-[40px]">
-                    <div className="text-lg font-bold text-primary-600 leading-none">{event.date}</div>
-                    <div className="text-xs text-primary-400">{event.month}</div>
+        <motion.div variants={itemVariants} className="space-y-6">
+          <Card>
+            <h2 className="text-lg font-heading font-semibold text-gray-800 mb-4">Quick Links</h2>
+            <div className="space-y-3">
+              {[
+                { label: 'View Timetable', path: '/student/timetable', icon: HiOutlineCalendar, color: 'bg-blue-50 text-blue-600' },
+                { label: 'My Attendance', path: '/student/attendance', icon: HiOutlineClipboardCheck, color: 'bg-green-50 text-green-600' },
+                { label: 'Assignments', path: '/student/assignments', icon: HiOutlineBookOpen, color: 'bg-purple-50 text-purple-600' },
+                { label: 'Study Materials', path: '/student/study-materials', icon: HiOutlineAcademicCap, color: 'bg-orange-50 text-orange-600' },
+              ].map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.path}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                >
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${link.color}`}>
+                    <link.icon className="w-5 h-5" />
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-800 text-sm">{event.title}</p>
-                    <p className="text-xs text-gray-500">{event.venue}</p>
-                  </div>
-                </div>
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
+                    {link.label}
+                  </span>
+                  <HiOutlineChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
+                </Link>
               ))}
             </div>
-          </div>
+          </Card>
+
+          <Card>
+            <h2 className="text-lg font-heading font-semibold text-gray-800 mb-4">Notifications</h2>
+            {notifications.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">No new notifications.</p>
+            ) : (
+              <div className="space-y-3">
+                {notifications.map((n, idx) => (
+                  <div key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="relative">
+                      <HiOutlineBell className="w-5 h-5 text-gray-400" />
+                      {!n.isRead && (
+                        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800">{n.title}</p>
+                      {n.message && <p className="text-xs text-gray-500 mt-0.5">{n.message}</p>}
+                      <p className="text-xs text-gray-400 mt-1">{formatDate(n.createdAt)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

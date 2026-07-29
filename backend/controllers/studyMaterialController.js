@@ -47,7 +47,9 @@ const getStudyMaterial = asyncHandler(async (req, res) => {
 });
 
 const createStudyMaterial = asyncHandler(async (req, res) => {
-  const material = await StudyMaterial.create(req.body);
+  const body = { ...req.body };
+  if (req.file) body.file = req.file.path;
+  const material = await StudyMaterial.create(body);
   const fullMaterial = await StudyMaterial.findById(material._id)
     .populate('subject')
     .populate('class')

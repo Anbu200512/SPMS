@@ -71,11 +71,22 @@ const updateLeave = asyncHandler(async (req, res) => {
 });
 
 const deleteLeave = asyncHandler(async (req, res) => {
-  const leave = await LeaveRequest.findByIdAndDelete(req.params.id);
+  const leave = await LeaveRequest.findById(req.params.id);
   if (!leave) {
     throw new ApiError(404, 'Leave request not found');
   }
-  res.json(new ApiResponse(200, {}, 'Leave request deleted successfully'));
+
+  if (req.user.role !== 'admin' && leave.user.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, 'Not authorized to cancel this leave request');
+  }
+
+  if (leave.status !== 'Pending') {
+    throw new ApiError(400, 'Only pending leave requests can be cancelled');
+  }
+
+  await LeaveRequest.findByIdAndDelete(req.params.id);
+
+  res.json(new ApiResponse(200, {}, 'Leave request cancelled successfully'));
 });
 
 module.exports = { getLeaves, getLeave, createLeave, updateLeave, deleteLeave };

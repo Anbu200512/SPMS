@@ -7,8 +7,12 @@ const Teacher = require('../models/Teacher');
 const Admin = require('../models/Admin');
 const jwt = require('jsonwebtoken');
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '30d' });
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRE }
+  );
 };
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -30,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
     profile = await Admin.create({ user: user._id, ...profileData });
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user);
 
   const userData = user.toObject();
   delete userData.password;
@@ -53,7 +57,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, 'Invalid email or password');
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user);
 
   const userData = user.toObject();
   delete userData.password;

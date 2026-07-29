@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -9,39 +9,19 @@ import {
   HiOutlinePencilAlt,
   HiOutlineUpload,
   HiOutlineChevronRight,
+  HiOutlineAcademicCap,
+  HiOutlineStar,
+  HiOutlineExclamationCircle,
 } from 'react-icons/hi';
 import { classNames, formatDate } from '../../utils/helpers';
-import PortalLayout from '../../components/portal/PortalLayout';
-import StatCard from '../../components/portal/StatCard';
 
-const stats = [
-  { label: 'Assigned Classes', value: '5', icon: HiOutlineBookOpen, color: 'primary', trend: 0 },
-  { label: 'Total Students', value: '156', icon: HiOutlineUserGroup, color: 'accent', trend: 12 },
-  { label: 'Pending Tasks', value: '8', icon: HiOutlineClipboardList, color: 'red', trend: -5 },
-  { label: 'Attendance Today', value: '94%', icon: HiOutlineCalendar, color: 'green', trend: 2 },
-];
+import StatCard from '../../components/portal/StatCard';
+import { getTeacherDashboard } from '../../services/teacherService';
 
 const quickActions = [
   { label: 'Mark Attendance', path: '/teacher/attendance', icon: HiOutlineClipboardList, color: 'bg-blue-50 text-blue-600' },
   { label: 'Create Assignment', path: '/teacher/assignments', icon: HiOutlinePencilAlt, color: 'bg-purple-50 text-purple-600' },
-  { label: 'Upload Materials', path: '/teacher/materials', icon: HiOutlineUpload, color: 'bg-green-50 text-green-600' },
-];
-
-const schedule = [
-  { time: '08:00 - 08:45', subject: 'Mathematics', class: '10-A', room: '101' },
-  { time: '08:45 - 09:30', subject: 'Physics', class: '12-B', room: '201' },
-  { time: '09:30 - 10:15', subject: 'Chemistry', class: '11-A', room: '202' },
-  { time: '10:15 - 10:30', subject: 'Break', class: '-', room: '-' },
-  { time: '10:30 - 11:15', subject: 'Mathematics', class: '9-C', room: '103' },
-  { time: '11:15 - 12:00', subject: 'Physics Lab', class: '12-B', room: 'Lab 1' },
-  { time: '12:00 - 12:45', subject: 'Study Period', class: '10-B', room: '104' },
-];
-
-const recentNotifications = [
-  { id: 1, message: 'Staff meeting tomorrow at 3 PM', time: '1 hour ago', unread: true },
-  { id: 2, message: 'Submit grade sheets by Friday', time: '3 hours ago', unread: true },
-  { id: 3, message: 'PTA meeting rescheduled', time: '1 day ago', unread: false },
-  { id: 4, message: 'New curriculum guidelines released', time: '2 days ago', unread: false },
+  { label: 'Upload Materials', path: '/teacher/study-materials', icon: HiOutlineUpload, color: 'bg-green-50 text-green-600' },
 ];
 
 const containerVariants = {
@@ -55,17 +35,61 @@ const itemVariants = {
 };
 
 const Dashboard = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getTeacherDashboard()
+      .then((res) => {
+        setData(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || 'Failed to load dashboard');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+      return (
+        <div className="flex items-center justify-center h-64 text-red-500">{error}</div>
+      );
+  }
+
+  const teacherName = data?.teacher?.user?.name || 'Teacher';
+  const stats = [
+    { label: 'Assigned Classes', value: data?.stats?.assignedClasses ?? '0', icon: HiOutlineBookOpen, color: 'primary', trend: 0 },
+    { label: 'Total Students', value: data?.stats?.totalStudents ?? '0', icon: HiOutlineUserGroup, color: 'accent', trend: 0 },
+    { label: 'Subjects', value: data?.stats?.subjects ?? '0', icon: HiOutlineAcademicCap, color: 'blue', trend: 0 },
+    { label: 'Pending Assignments', value: data?.stats?.pendingAssignments ?? '0', icon: HiOutlineClipboardList, color: 'purple', trend: 0 },
+    { label: 'Pending Homework', value: data?.stats?.pendingHomework ?? '0', icon: HiOutlinePencilAlt, color: 'red', trend: 0 },
+    { label: "Today's Attendance", value: data?.stats?.todayAttendance ?? '0%', icon: HiOutlineCalendar, color: 'green', trend: 0 },
+  ];
+
+  const periods = data?.todayTimetable?.[0]?.periods || [];
+  const upcomingExams = data?.upcomingExams || [];
+  const notices = data?.notices || [];
+  const recentEvents = data?.recentEvents || [];
+
   return (
-    <PortalLayout>
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
         <motion.div variants={itemVariants}>
           <h1 className="text-2xl md:text-3xl font-heading font-bold text-gray-800">
-            Welcome back, Dr. Sharma
+            Welcome back, {teacherName}
           </h1>
           <p className="text-gray-500 mt-1">Here is your teaching overview for today.</p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {stats.map((stat) => (
             <StatCard key={stat.label} {...stat} />
           ))}
@@ -74,11 +98,11 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between gap-2 mb-4">
                 <h2 className="text-lg font-heading font-semibold text-gray-800">Today's Schedule</h2>
                 <Link
                   to="/teacher/timetable"
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+                  className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1 whitespace-nowrap"
                 >
                   Full Timetable <HiOutlineChevronRight className="w-4 h-4" />
                 </Link>
@@ -94,24 +118,83 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {schedule.map((period, idx) => (
-                      <tr
-                        key={idx}
-                        className={classNames(
-                          'border-b border-gray-50 hover:bg-gray-50 transition-colors',
-                          period.subject === 'Break' && 'bg-gray-50'
-                        )}
-                      >
-                        <td className="py-3 px-2 text-sm text-gray-600">{period.time}</td>
-                        <td className="py-3 px-2 text-sm font-medium text-gray-800">{period.subject}</td>
-                        <td className="py-3 px-2 text-sm text-gray-600">{period.class}</td>
-                        <td className="py-3 px-2 text-sm text-gray-600">{period.room}</td>
+                    {periods.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="py-6 text-center text-sm text-gray-400">No classes scheduled for today.</td>
                       </tr>
-                    ))}
+                    ) : (
+                      periods.map((period, idx) => (
+                        <tr
+                          key={idx}
+                          className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                        >
+                          <td className="py-3 px-2 text-sm text-gray-600">
+                            {period.startTime} - {period.endTime}
+                          </td>
+                          <td className="py-3 px-2 text-sm font-medium text-gray-800">{period.subject}</td>
+                          <td className="py-3 px-2 text-sm text-gray-600">{period.class}</td>
+                          <td className="py-3 px-2 text-sm text-gray-600">{period.roomNo}</td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
+
+            {upcomingExams.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <HiOutlineExclamationCircle className="w-5 h-5 text-primary-500" />
+                  <h2 className="text-lg font-heading font-semibold text-gray-800">Upcoming Exams</h2>
+                </div>
+                <div className="space-y-3">
+                  {upcomingExams.map((exam, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-primary-50/30 transition-colors"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">{exam.subject}</p>
+                        <p className="text-xs text-gray-500">{exam.className || exam.class}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-primary-600">{formatDate(exam.date)}</p>
+                        {exam.type && <p className="text-xs text-gray-400">{exam.type}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {recentEvents.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <HiOutlineStar className="w-5 h-5 text-accent-500" />
+                  <h2 className="text-lg font-heading font-semibold text-gray-800">Recent Events</h2>
+                </div>
+                <div className="space-y-3">
+                  {recentEvents.map((event, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-accent-500 mt-2 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800">{event.title}</p>
+                        {event.description && (
+                          <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{event.description}</p>
+                        )}
+                        {event.date && (
+                          <p className="text-xs text-gray-400 mt-1">{formatDate(event.date)}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
 
           <motion.div variants={itemVariants} className="space-y-6">
@@ -137,42 +220,36 @@ const Dashboard = () => {
             </div>
 
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-heading font-semibold text-gray-800">Recent Notifications</h2>
-                <Link
-                  to="/teacher/notifications"
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                >
-                  View All
-                </Link>
-              </div>
+              <h2 className="text-lg font-heading font-semibold text-gray-800 mb-4">Notices</h2>
               <div className="space-y-3">
-                {recentNotifications.map((n) => (
-                  <div
-                    key={n.id}
-                    className={classNames(
-                      'flex items-start gap-3 p-3 rounded-lg',
-                      n.unread ? 'bg-primary-50/50' : 'hover:bg-gray-50'
-                    )}
-                  >
+                {notices.length === 0 ? (
+                  <p className="text-sm text-gray-400 text-center py-4">No notices at this time.</p>
+                ) : (
+                  notices.map((notice, idx) => (
                     <div
-                      className={classNames(
-                        'w-2 h-2 rounded-full mt-2 flex-shrink-0',
-                        n.unread ? 'bg-primary-500' : 'bg-transparent'
-                      )}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-700 line-clamp-2">{n.message}</p>
-                      <p className="text-xs text-gray-400 mt-1">{n.time}</p>
+                      key={idx}
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-primary-500 mt-2 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 line-clamp-1">
+                          {notice.title || notice.message}
+                        </p>
+                        {notice.title && notice.message && (
+                          <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{notice.message}</p>
+                        )}
+                        {notice.createdAt && (
+                          <p className="text-xs text-gray-400 mt-1">{formatDate(notice.createdAt)}</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </motion.div>
         </div>
       </motion.div>
-    </PortalLayout>
   );
 };
 

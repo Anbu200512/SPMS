@@ -20,12 +20,19 @@ const fileFilter = (req, file, cb) => {
     "image/jpeg",
     "image/png",
     "image/jpg",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "video/mp4",
+    "video/x-msvideo",
+    "video/quicktime",
   ];
 
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only PDF, JPG and PNG files are allowed"), false);
+    cb(new Error("Only PDF, JPG, PNG, DOC, DOCX, PPT, PPTX, and video files are allowed"), false);
   }
 };
 
@@ -33,7 +40,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 50 * 1024 * 1024, // 50MB
   },
 });
 

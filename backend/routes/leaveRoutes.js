@@ -13,6 +13,6 @@ router.get('/', protect, getLeaves);
 router.get('/:id', protect, getLeave);
 router.post('/', protect, createLeave);
 router.put('/:id', protect, authorize('admin', 'teacher'), updateLeave);
-router.delete('/:id', protect, authorize('admin'), deleteLeave);
+router.delete('/:id', protect, deleteLeave);
 
 module.exports = router;

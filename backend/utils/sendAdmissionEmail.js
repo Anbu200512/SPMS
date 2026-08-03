@@ -38,7 +38,7 @@ const sendAdmissionEmail = async (admission, files = []) => {
         <p><strong>Phone:</strong> ${admission.phone}</p>
         <p><strong>Email:</strong> ${admission.email}</p>
 
-        <hr>
+        <hr> 
 
         <p><strong>Address:</strong> ${admission.address || "-"}</p>
         <p><strong>Previous School:</strong> ${admission.previousSchool || "-"}</p>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   HiOutlineCog,
@@ -7,9 +7,14 @@ import {
   HiOutlineCurrencyRupee,
   HiOutlineUsers,
   HiOutlineCalendar,
+  HiOutlineCreditCard,
+  HiOutlineDeviceMobile,
+  HiOutlineCash,
 } from 'react-icons/hi';
 import Button from '../../components/ui/Button';
 import { classNames } from '../../utils/helpers';
+import { showSuccess, showError } from '../../components/ui/Toast';
+import { getSettings, updateSetting } from '../../services/dataService';
 
 const initialSettings = {
   schoolName: 'SPMS School',
@@ -30,6 +35,13 @@ const initialSettings = {
   discountValue: '10',
 };
 
+const PAYMENT_METHOD_OPTIONS = [
+  { key: 'upi', label: 'UPI', description: 'Google Pay, PhonePe, Paytm & other UPI apps', icon: HiOutlineDeviceMobile },
+  { key: 'card', label: 'Credit / Debit Cards', description: 'Visa, Mastercard, RuPay & American Express', icon: HiOutlineCreditCard },
+  { key: 'netbanking', label: 'Netbanking', description: 'All major Indian banks', icon: HiOutlineCurrencyRupee },
+  { key: 'wallet', label: 'Wallets', description: 'Paytm, Mobikwik, Amazon Pay & more', icon: HiOutlineCash },
+];
+
 const activeSessions = [
   { id: 1, year: '2026-27', start: '2026-04-01', end: '2027-03-31', active: true },
   { id: 2, year: '2025-26', start: '2025-04-01', end: '2026-03-31', active: false },
@@ -39,13 +51,47 @@ export default function Settings() {
   const [settings, setSettings] = useState(initialSettings);
   const [activeTab, setActiveTab] = useState('general');
   const [saved, setSaved] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState(
+    PAYMENT_METHOD_OPTIONS.map((m) => m.key)
+  );
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const res = await getSettings();
+        const map = res.data?.data?.settings || {};
+        if (Array.isArray(map.paymentMethods) && map.paymentMethods.length > 0) {
+          setPaymentMethods(map.paymentMethods);
+        }
+      } catch {
+        // keep defaults
+      }
+    };
+    loadSettings();
+  }, []);
 
   const handleChange = (field, value) => {
     setSettings({ ...settings, [field]: value });
     setSaved(false);
   };
 
-  const handleSave = () => {
+  const toggleMethod = (key) => {
+    setPaymentMethods((prev) =>
+      prev.includes(key) ? prev.filter((m) => m !== key) : [...prev, key]
+    );
+    setSaved(false);
+  };
+
+  const handleSave = async () => {
+    if (activeTab === 'payments') {
+      try {
+        await updateSetting('paymentMethods', paymentMethods);
+        showSuccess('Payment settings saved');
+      } catch (err) {
+        showError(err?.response?.data?.message || 'Failed to save payment settings');
+      }
+      return;
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -54,6 +100,7 @@ export default function Settings() {
     { key: 'general', label: 'General', icon: HiOutlineCog },
     { key: 'academic', label: 'Academic Year', icon: HiOutlineCalendar },
     { key: 'fees', label: 'Fee Structure', icon: HiOutlineCurrencyRupee },
+    { key: 'payments', label: 'Payments', icon: HiOutlineCreditCard },
     { key: 'sessions', label: 'Sessions', icon: HiOutlineUsers },
   ];
 
@@ -182,6 +229,61 @@ export default function Settings() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Discount Value</label>
                     <input type="number" value={settings.discountValue} onChange={(e) => handleChange('discountValue', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
                   </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'payments' && (
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-primary-50 border border-primary-100">
+                  <HiOutlineCreditCard className="w-6 h-6 text-primary-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">Payment Gateway: Razorpay</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Choose which payment methods students can use at checkout. API keys are configured
+                      in <code className="text-primary-600 bg-white px-1 py-0.5 rounded text-xs">backend/.env</code>
+                      {' '}(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET).
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {PAYMENT_METHOD_OPTIONS.map((method) => {
+                    const enabled = paymentMethods.includes(method.key);
+                    return (
+                      <button
+                        key={method.key}
+                        onClick={() => toggleMethod(method.key)}
+                        className={classNames(
+                          'flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-colors',
+                          enabled
+                            ? 'border-primary-500 bg-primary-50'
+                            : 'border-gray-200 bg-white hover:border-gray-300'
+                        )}
+                      >
+                        <div className={classNames(
+                          'w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0',
+                          enabled ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-400'
+                        )}>
+                          <method.icon className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-semibold text-gray-800">{method.label}</p>
+                            <span className={classNames(
+                              'relative inline-flex h-5 w-9 items-center rounded-full transition-colors',
+                              enabled ? 'bg-primary-500' : 'bg-gray-300'
+                            )}>
+                              <span className={classNames(
+                                'inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform',
+                                enabled ? 'translate-x-5' : 'translate-x-0.5'
+                              )} />
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">{method.description}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}

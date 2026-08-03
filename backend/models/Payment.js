@@ -30,6 +30,15 @@ const paymentSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    gateway: {
+      type: String,
+      enum: ['Razorpay', 'Cash', 'Card', 'Cheque', 'DD'],
+      default: 'Razorpay',
+    },
+    gatewayPaymentId: {
+      type: String,
+      trim: true,
+    },
     receiptNo: {
       type: String,
       trim: true,

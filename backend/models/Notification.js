@@ -7,6 +7,14 @@ const notificationSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    audience: {
+      type: String,
+      default: '',
+    },
     title: {
       type: String,
       required: [true, 'Title is required'],

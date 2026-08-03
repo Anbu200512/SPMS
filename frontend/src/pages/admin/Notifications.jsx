@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   HiOutlineBell,
@@ -6,39 +6,83 @@ import {
   HiOutlineCalendar,
   HiOutlinePaperAirplane,
   HiOutlineClock,
+  HiOutlineUsers,
+  HiOutlineUserGroup,
 } from 'react-icons/hi';
 import Button from '../../components/ui/Button';
 import { classNames, formatDate } from '../../utils/helpers';
-
-const initialNotifications = [
-  { id: 1, title: 'PTA Meeting Reminder', message: 'This is a reminder that the quarterly PTA meeting is scheduled for July 20th at 2:00 PM in the Conference Hall.', recipients: 'All Parents', sentAt: '2026-06-28 10:00 AM', status: 'sent' },
-  { id: 2, title: 'Fee Payment Due', message: 'Dear parents, the tuition fee for July is due by July 10th. Please make the payment at the earliest.', recipients: 'All Parents', sentAt: '2026-06-25 09:00 AM', status: 'sent' },
-  { id: 3, title: 'Holiday Notice', message: 'The school will remain closed on August 15th on account of Independence Day.', recipients: 'All', sentAt: '2026-06-20 11:00 AM', status: 'sent' },
-  { id: 4, title: 'Exam Schedule', message: 'Term 1 exam schedule has been published. Please check the portal for details.', recipients: 'Class 10', sentAt: '2026-06-18 02:00 PM', status: 'sent' },
-];
+import { showSuccess, showError } from '../../components/ui/Toast';
+import { getAll, createNotification, getSentNotifications } from '../../services/dataService';
 
 const recipientOptions = [
-  { value: 'all', label: 'All (Students & Parents)' },
+  { value: 'all', label: 'All (Students & Teachers)' },
   { value: 'students', label: 'All Students' },
   { value: 'teachers', label: 'All Teachers' },
   { value: 'parents', label: 'All Parents' },
   { value: 'class', label: 'Specific Class' },
 ];
 
-const classes = ['6', '7', '8', '9', '10', '11', '12'];
+const audienceIconMap = {
+  'All (Students & Teachers)': HiOutlineUsers,
+  'All Students': HiOutlineUserGroup,
+  'All Teachers': HiOutlineUserGroup,
+  'All Parents': HiOutlineUsers,
+};
 
 export default function Notifications() {
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const [notifications, setNotifications] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [activeTab, setActiveTab] = useState('send');
   const [form, setForm] = useState({ title: '', message: '', recipients: 'all', class: '' });
+  const [sending, setSending] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleTime, setScheduleTime] = useState('');
 
-  const handleSend = (e) => {
+  useEffect(() => {
+    getAll('classes', { limit: 100 })
+      .then((res) => setClasses(res.data?.data?.classes || []))
+      .catch(() => setClasses([]));
+  }, []);
+
+  useEffect(() => {
+    if (activeTab !== 'history') return;
+    setLoading(true);
+    getSentNotifications({ page, limit: 10 })
+      .then((res) => {
+        const data = res.data?.data || {};
+        setNotifications(data.notifications || []);
+        if (data.pagination) setTotalPages(data.pagination.pages || 1);
+      })
+      .catch(() => showError('Failed to load notification history'))
+      .finally(() => setLoading(false));
+  }, [activeTab, page]);
+
+  const handleSend = async (e) => {
     e.preventDefault();
-    const recipientLabel = form.recipients === 'class' ? `Class ${form.class}` : recipientOptions.find((r) => r.value === form.recipients)?.label;
-    setNotifications([{ id: Date.now(), title: form.title, message: form.message, recipients: recipientLabel, sentAt: new Date().toLocaleString(), status: 'sent' }, ...notifications]);
-    setForm({ title: '', message: '', recipients: 'all', class: '' });
+    if (form.recipients === 'class' && !form.class) {
+      showError('Please select a class');
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await createNotification({
+        title: form.title,
+        message: form.message,
+        recipients: form.recipients,
+        class: form.recipients === 'class' ? form.class : undefined,
+      });
+      const count = res.data?.data?.count;
+      showSuccess(count ? `Notification sent to ${count} recipients` : 'Notification sent successfully');
+      setForm({ title: '', message: '', recipients: 'all', class: '' });
+      setPage(1);
+    } catch (err) {
+      showError(err?.response?.data?.message || 'Failed to send notification');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -71,22 +115,22 @@ export default function Notifications() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Recipients</label>
-                <select value={form.recipients} onChange={(e) => setForm({ ...form, recipients: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <select value={form.recipients} onChange={(e) => setForm({ ...form, recipients: e.target.value, class: '' })} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
                   {recipientOptions.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
               </div>
               {form.recipients === 'class' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
-                  <select value={form.class} onChange={(e) => setForm({ ...form, class: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                  <select required value={form.class} onChange={(e) => setForm({ ...form, class: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
                     <option value="">Select Class</option>
-                    {classes.map((c) => <option key={c} value={c}>Class {c}</option>)}
+                    {classes.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
                   </select>
                 </div>
               )}
             </div>
             <div className="flex justify-end pt-2">
-              <Button type="submit" iconLeft={<HiOutlinePaperAirplane className="w-4 h-4" />}>Send Notification</Button>
+              <Button type="submit" loading={sending} iconLeft={<HiOutlinePaperAirplane className="w-4 h-4" />}>Send Notification</Button>
             </div>
           </form>
         </div>
@@ -94,23 +138,75 @@ export default function Notifications() {
 
       {activeTab === 'history' && (
         <div className="space-y-3">
-          {notifications.map((n) => (
-            <div key={n.id} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base font-heading font-semibold text-gray-800">{n.title}</h3>
-                    <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">{n.status}</span>
-                  </div>
-                  <p className="text-sm text-gray-500 mb-2">{n.message}</p>
-                  <div className="flex items-center gap-4 text-xs text-gray-400">
-                    <span className="flex items-center gap-1"><HiOutlineMail className="w-3.5 h-3.5" /> {n.recipients}</span>
-                    <span className="flex items-center gap-1"><HiOutlineClock className="w-3.5 h-3.5" /> {n.sentAt}</span>
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="bg-white rounded-xl p-10 border border-gray-100 shadow-sm text-center">
+              <HiOutlineBell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-sm text-gray-500">No notifications sent yet.</p>
+            </div>
+          ) : (
+            notifications.map((n) => {
+              const AudienceIcon = audienceIconMap[n.audience] || HiOutlineBell;
+  const getAudienceLabel = (n) => {
+    if (n.recipients === 'class') {
+      const cls = classes.find((c) => c._id === n.class);
+      return cls ? cls.name : 'Specific Class';
+    }
+    return recipientOptions.find((r) => r.value === n.recipients)?.label || 'All';
+  };
+
+  return (
+                <div key={n._id} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <h3 className="text-base font-heading font-semibold text-gray-800">{n.title}</h3>
+                        <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">Sent</span>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-3">{n.message}</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-400 flex-wrap">
+                        <span className="flex items-center gap-1"><HiOutlineMail className="w-3.5 h-3.5" /> {n.audience || 'All'}</span>
+                        <span className="flex items-center gap-1"><HiOutlineUsers className="w-3.5 h-3.5" /> {n.count} recipient{n.count > 1 ? 's' : ''}</span>
+                        <span className="flex items-center gap-1"><HiOutlineClock className="w-3.5 h-3.5" /> {formatDate(n.createdAt, { hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-3 flex-wrap">
+                        <AudienceIcon className="w-3.5 h-3.5 text-gray-400" />
+                        {(n.recipients || []).slice(0, 5).map((r) => (
+                          <span key={r._id} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">{r.name}</span>
+                        ))}
+                        {n.recipients && n.recipients.length > 5 && (
+                          <span className="text-xs text-gray-400">+{n.recipients.length - 5} more</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              );
+            })
+          )}
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Previous
+              </button>
+              <span className="text-sm text-gray-600">Page {page} of {totalPages}</span>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Next
+              </button>
             </div>
-          ))}
+          )}
         </div>
       )}
 

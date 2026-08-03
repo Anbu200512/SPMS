@@ -12,6 +12,7 @@ import {
   HiOutlineAcademicCap,
   HiOutlineStar,
   HiOutlineExclamationCircle,
+  HiOutlineBell,
 } from 'react-icons/hi';
 import { classNames, formatDate } from '../../utils/helpers';
 
@@ -79,6 +80,7 @@ const Dashboard = () => {
   const upcomingExams = data?.upcomingExams || [];
   const notices = data?.notices || [];
   const recentEvents = data?.recentEvents || [];
+  const notifications = data?.notifications || [];
 
   return (
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
@@ -216,6 +218,41 @@ const Dashboard = () => {
                     <HiOutlineChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
                   </Link>
                 ))}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <h2 className="text-lg font-heading font-semibold text-gray-800">Notifications</h2>
+                <Link
+                  to="/teacher/notifications"
+                  className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1 whitespace-nowrap"
+                >
+                  View All <HiOutlineChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div className="space-y-3">
+                {notifications.length === 0 ? (
+                  <p className="text-sm text-gray-400 text-center py-4">You're all caught up!</p>
+                ) : (
+                  notifications.map((notification, idx) => (
+                    <div
+                      key={notification._id || idx}
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-primary-500 mt-2 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 line-clamp-1">
+                          {notification.title}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{notification.message}</p>
+                        {notification.createdAt && (
+                          <p className="text-xs text-gray-400 mt-1">{formatDate(notification.createdAt)}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 

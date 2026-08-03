@@ -12,6 +12,7 @@ const Result = require('../models/Result');
 const ExamSchedule = require('../models/ExamSchedule');
 const Event = require('../models/Event');
 const Notice = require('../models/Notice');
+const Notification = require('../models/Notification');
 const Timetable = require('../models/Timetable');
 const LeaveRequest = require('../models/LeaveRequest');
 
@@ -202,6 +203,7 @@ const getMyDashboard = asyncHandler(async (req, res) => {
     upcomingExams,
     recentEvents,
     notices,
+    notifications,
   ] = await Promise.all([
     Student.countDocuments({ class: { $in: classIds } }),
     Assignment.countDocuments({ teacher: teacher._id }),
@@ -228,6 +230,7 @@ const getMyDashboard = asyncHandler(async (req, res) => {
       ],
       isActive: true,
     }).sort('-createdAt').limit(5),
+    Notification.find({ recipient: req.user._id, isRead: false }).sort('-createdAt').limit(5),
   ]);
 
   res.json(
@@ -240,11 +243,13 @@ const getMyDashboard = asyncHandler(async (req, res) => {
         pendingAssignments,
         pendingHomework,
         todayAttendance,
+        unreadNotifications: notifications.length,
       },
       todayTimetable,
       upcomingExams,
       recentEvents,
       notices,
+      notifications,
     })
   );
 });

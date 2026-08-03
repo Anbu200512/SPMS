@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   HiOutlineBell,
@@ -10,12 +10,40 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './Sidebar';
 import useAuth from '../../hooks/useAuth';
 import { getInitials, classNames } from '../../utils/helpers';
+import { getNotifications } from '../../services/dataService';
 
 const PortalLayout = ({ children, role: propRole }) => {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    const fetchCount = async () => {
+      try {
+        const res = await getNotifications({ page: 1, limit: 1 });
+        if (active) setUnreadCount(res.data?.data?.unreadCount || 0);
+      } catch {
+        // ignore polling failures
+      }
+    };
+
+    fetchCount();
+    const interval = setInterval(fetchCount, 30000);
+    const onFocus = () => fetchCount();
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [location.pathname]);
+
+  const role = user?.role || propRole;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -42,17 +70,23 @@ const PortalLayout = ({ children, role: propRole }) => {
                 <HiOutlineMenu className="w-6 h-6" />
               </button>
               <h1 className="text-lg font-heading font-semibold text-gray-800">
-                {propRole === 'admin' ? 'Admin Portal' : propRole === 'teacher' ? 'Teacher Portal' : 'Student Portal'}
+                {role === 'admin' ? 'Admin Portal' : role === 'teacher' ? 'Teacher Portal' : 'Student Portal'}
               </h1>
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors">
+              <Link
+                to={`/${role}/notifications`}
+                className="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                title="Notifications"
+              >
                 <HiOutlineBell className="w-6 h-6" />
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  3
-                </span>
-              </button>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </Link>
 
               <div className="relative">
                 <button
